@@ -41,7 +41,7 @@ func main() {
 	if strings.ToLower(confirm) == "y" || strings.ToLower(confirm) == "yes" {
 		fmt.Println("เริ่มรันคำสั่ง... ")
 		for i := 0; i < len(hosts); i++ {
-			fmt.Printf("(%d) ip: %s", i+1, hosts[i])
+			fmt.Printf("(%d) ip: %s \n", i+1, hosts[i])
 			fmt.Println(sshbot.Runcommand(hosts[i], pass[i], command))
 		}
 		return
