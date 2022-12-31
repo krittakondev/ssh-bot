@@ -42,7 +42,7 @@ func main() {
 		fmt.Println("เริ่มรันคำสั่ง... ")
 		for i := 0; i < len(hosts); i++ {
 			fmt.Printf("ip: %s pass: %s \n", hosts[i], pass[i])
-			sshbot.Runcommand(hosts[i], pass[i], command)
+			fmt.Println(sshbot.Runcommand(hosts[i], pass[i], command))
 		}
 		return
 	} else {

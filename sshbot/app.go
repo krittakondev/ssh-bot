@@ -2,14 +2,13 @@ package sshbot
 
 import (
 	"bytes"
-	"fmt"
 	"log"
 	"net"
 
 	"golang.org/x/crypto/ssh"
 )
 
-func Runcommand(host string, password string, command string) {
+func Runcommand(host string, password string, command string) string {
 	// รับพารามิเตอร์จากคำสั่งรัน
 
 	port := "22"
@@ -38,5 +37,7 @@ func Runcommand(host string, password string, command string) {
 	if err := session.Run(command); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(buff.String())
+	session.Close()
+	conn.Close()
+	return buff.String()
 }
