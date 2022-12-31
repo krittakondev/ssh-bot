@@ -2,6 +2,7 @@ package sshbot
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"net"
 
@@ -35,7 +36,8 @@ func Runcommand(host string, password string, command string) string {
 	var buff bytes.Buffer
 	session.Stdout = &buff
 	if err := session.Run(command); err != nil {
-		log.Fatal(err)
+		fmt.Printf("%v", err)
+		// log.Fatal(err)
 	}
 	session.Close()
 	conn.Close()
