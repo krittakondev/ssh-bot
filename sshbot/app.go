@@ -29,6 +29,7 @@ func checkDir() {
 func Login() {
 	var email string
 	var password string
+	count_login++
 	url := "https://host.b-13.co/api/login"
 	fmt.Printf("email: ")
 	fmt.Scanf("%s \n", &email)
@@ -59,21 +60,28 @@ func Login() {
 
 	content, _ := ioutil.ReadAll(resp.Body)
 	json.Unmarshal([]byte(string(content)), &resp_body)
-	fmt.Printf("%v", resp_body)
-	fmt.Printf("%T", resp_body)
+	// fmt.Printf("%v", resp_body)
+	// fmt.Printf("%T", resp_body)
 
-	// if resp_body["success"] == true {
-	// 	// return_token := resp_data["data"]["token"]
-	// 	md := resp_body["data"]
+	if resp_body["success"] == true {
+		// return_token := resp_data["data"]["token"]
+		md := (resp_body["data"]).(map[string]interface{})
 
-	// 	// token = md
-	// 	fmt.Printf("%v\n", md)
-	// 	fmt.Printf("%T\n", md)
+		// fmt.Printf("%v\n", md)
+		// fmt.Printf("%Tn", md)
+		token = md["jwt_token"].(string)
+		// fmt.Println(token)
+		os.WriteFile(main_path+"/auth", []byte(token), 0644)
+	} else {
+		fmt.Printf("%v\n", resp_body["message"])
+		if count_login >= 3 {
+			fmt.Println("เข้าสู่ระบบผิดพลาด 3 ครั้ง!!!")
+			os.Exit(0)
+		} else {
+			Login()
 
-	// } else {
-	// 	fmt.Printf("%v\n", resp_body["message"])
-	// 	Login()
-	// }
+		}
+	}
 }
 
 func Checkauth() {
