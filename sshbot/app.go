@@ -66,23 +66,23 @@ func Login() {
 	// fmt.Printf("%v", resp_body)
 	// fmt.Printf("%T", resp_body)
 
+	fmt.Printf("%v\n", resp_body["message"])
 	if resp_body["success"] == true {
 		// return_token := resp_data["data"]["token"]
 		md := (resp_body["data"]).(map[string]interface{})
 
 		// fmt.Printf("%v\n", md)
 		// fmt.Printf("%Tn", md)
-		token = md["jwt_token"].(string)
 		// fmt.Println(token)
-		os.WriteFile(main_path+"/auth", []byte(token), 0644)
+		mytoken := md["jwt_token"].(string)
+		os.WriteFile(main_path+"/auth", []byte(mytoken), 0644)
+		os.Exit(0)
 	} else {
-		fmt.Printf("%v\n", resp_body["message"])
 		if count_login >= 3 {
 			fmt.Println("เข้าสู่ระบบผิดพลาด 3 ครั้ง!!!")
 			os.Exit(0)
 		} else {
 			Login()
-
 		}
 	}
 }
@@ -94,9 +94,13 @@ func Checkauth() {
 		// os.WriteFile(main_path+"/auth", []byte("this is token"), 0644)
 		Login()
 		// fmt.Println("set new token")
-		// token = token
 	}
 	token = string(readAuth)
+}
+
+func SetToken(my_token string) {
+	token = my_token
+
 }
 
 func Auth() bool {
@@ -105,28 +109,30 @@ func Auth() bool {
 
 	req, _ := http.NewRequest("GET", url, nil)
 	get_token := GetToken()
-	req.Header.Set("token", get_token)
+	req.Header.Set("auth-token", get_token)
 	client := &http.Client{}
 
 	fmt.Println("checking token...")
 	res, err := client.Do(req)
 	// res, err := client.Get(url)
 	if err != nil {
-		fmt.Println("errrrrr")
 		panic(err)
 	}
-	fmt.Println("check done")
 	defer res.Body.Close()
 	var resp_body map[string]interface{}
 
-	content, _ := ioutil.ReadAll(res.Body)
-	fmt.Println(content)
-	json.Unmarshal([]byte(string(content)), &resp_body)
-	if resp_body["success"] == false {
-		fmt.Println(resp_body["message"])
-		return false
+	if res.StatusCode == 406 {
+		fmt.Println("โทเคนหมดอายุโปรดเข้าสู่ระบบใหม่")
+		Login()
 	}
-	return true
+	content, _ := ioutil.ReadAll(res.Body)
+	json.Unmarshal([]byte(string(content)), &resp_body)
+	if resp_body["success"] == true {
+		return true
+	}
+
+	fmt.Println(resp_body["message"])
+	return false
 }
 
 func GetToken() string {
