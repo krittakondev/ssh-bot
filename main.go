@@ -25,6 +25,9 @@ func get_list() ([]string, []string) {
 
 func main() {
 	hosts, pass := get_list()
+	sshbot.Checkauth()
+	fmt.Println(sshbot.GetToken())
+	return
 	if len(hosts) != len(pass) {
 		fmt.Println("จำนวน host.txt กับ pass.txt ไม่เท่ากับ")
 		return
