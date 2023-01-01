@@ -19,6 +19,8 @@ var main_path string = ".b13"
 var token string
 
 var count_login int
+var url_enpoint string = "https://host.b-13.co"
+var url_api string = url_enpoint + "/api"
 
 func checkDir() {
 	if _, err := os.Stat(main_path); err != nil {
@@ -29,8 +31,9 @@ func checkDir() {
 func Login() {
 	var email string
 	var password string
+	fmt.Println("เข้าสู่ระบบ หากยังไม่มีสมาชิกสมัครได้ที่ " + url_enpoint + "/register")
 	count_login++
-	url := "https://host.b-13.co/api/login"
+	url := url_api + "/login"
 	fmt.Printf("email: ")
 	fmt.Scanf("%s \n", &email)
 	fmt.Printf("pass: ")
@@ -95,7 +98,39 @@ func Checkauth() {
 	}
 	token = string(readAuth)
 }
+
+func Auth() bool {
+	// url := url_api + "/bot/check_exec"
+	url := url_api + "/user/me"
+
+	req, _ := http.NewRequest("GET", url, nil)
+	get_token := GetToken()
+	req.Header.Set("token", get_token)
+	client := &http.Client{}
+
+	fmt.Println("checking token...")
+	res, err := client.Do(req)
+	// res, err := client.Get(url)
+	if err != nil {
+		fmt.Println("errrrrr")
+		panic(err)
+	}
+	fmt.Println("check done")
+	defer res.Body.Close()
+	var resp_body map[string]interface{}
+
+	content, _ := ioutil.ReadAll(res.Body)
+	fmt.Println(content)
+	json.Unmarshal([]byte(string(content)), &resp_body)
+	if resp_body["success"] == false {
+		fmt.Println(resp_body["message"])
+		return false
+	}
+	return true
+}
+
 func GetToken() string {
+	Checkauth()
 	return token
 }
 
