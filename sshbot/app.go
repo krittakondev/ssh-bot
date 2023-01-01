@@ -5,12 +5,25 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 
 	"golang.org/x/crypto/ssh"
 )
 
+var main_path string = ".b13"
+
+func checkfile() {
+	if _, err := os.Stat(main_path); err == nil {
+		os.WriteFile(main_path+"/auth", []byte("this is token"), 0644)
+	} else {
+		os.Mkdir(main_path, 0755)
+	}
+
+}
+
 func Runcommand(host string, password string, command string) string {
 	// รับพารามิเตอร์จากคำสั่งรัน
+	// checkfile()
 
 	port := "22"
 	username := "root"
