@@ -12,6 +12,7 @@ import (
 	"net/http"
 
 	"golang.org/x/crypto/ssh"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 var main_path string = ".b13"
@@ -31,13 +32,20 @@ func checkDir() {
 func Login() {
 	var email string
 	var password string
-	fmt.Println("เข้าสู่ระบบ หากยังไม่มีสมาชิกสมัครได้ที่ " + url_enpoint + "/register")
+	fmt.Println("\nเข้าสู่ระบบ หากยังไม่มีสมาชิกสมัครได้ที่ " + url_enpoint + "/register")
 	count_login++
 	url := url_api + "/login"
 	fmt.Printf("email: ")
 	fmt.Scanf("%s \n", &email)
-	fmt.Printf("pass: ")
-	fmt.Scanf("%s \n", &password)
+	fmt.Printf("pass(รหัสผ่านจะไม่โชว์ตอนพิมพ์): ")
+	// fmt.Scanf("%s \n", &password)
+	// password, e := terminal.ReadPassword(int(os.Stdin.Fd()))
+	passwd, e := terminal.ReadPassword(int(os.Stdin.Fd()))
+	if e != nil {
+		log.Fatal(e)
+	}
+	password = string(passwd)
+	fmt.Println()
 
 	var jsonStr = []byte(`{"email":"` + email + `", "password": "` + password + `"}`)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
