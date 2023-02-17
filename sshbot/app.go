@@ -30,7 +30,7 @@ func checkDir() {
 }
 
 func PrintCredit(){
-	fmt.Println("Credit: krittakon chuchat")
+	fmt.Println("Credit: https://github.com/krittakondev")
 	fmt.Println("")
 }
 
