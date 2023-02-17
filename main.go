@@ -1,10 +1,10 @@
 package main
 
 import (
-	"b13sshbot/sshbot"
 	"bufio"
 	"fmt"
 	"os"
+	"sshbot-cli/sshbot"
 	"strings"
 )
 
