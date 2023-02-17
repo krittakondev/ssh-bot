@@ -26,27 +26,27 @@ func get_list() ([]string, []string) {
 func main() {
 	hosts, pass := get_list()
 	if len(hosts) != len(pass) {
-		fmt.Println("จำนวน host.txt กับ pass.txt ไม่เท่ากับ")
+		fmt.Println("host.txt and pass.txt length line not match!!!")
 		return
 	}
 	var command string
 	var confirm string
-	fmt.Printf("ใส่คำสั่งที่ต้องการรัน: ")
+	fmt.Printf("command: ")
 	scanner := bufio.NewScanner(os.Stdin)
 	if scanner.Scan() {
 		command = scanner.Text()
 	}
-	fmt.Printf("ยืนยันจะรันทั้งหมด %d server (y/N): ", len(hosts))
+	fmt.Printf("confirm to run %d server (y/N): ", len(hosts))
 	fmt.Scanln(&confirm)
 	if strings.ToLower(confirm) == "y" || strings.ToLower(confirm) == "yes" {
-		fmt.Println("เริ่มรันคำสั่ง... ")
+		fmt.Println("starting... ")
 		for i := 0; i < len(hosts); i++ {
 			fmt.Printf("(%d) ip: %s \n", i+1, hosts[i])
 			fmt.Println(sshbot.Runcommand(hosts[i], pass[i], command))
 		}
 		return
 	} else {
-		fmt.Println("ทำการยกเลิก!! ")
+		fmt.Println("exit!! ")
 		return
 	}
 

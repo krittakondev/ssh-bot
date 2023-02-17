@@ -29,6 +29,11 @@ func checkDir() {
 	}
 }
 
+func PrintCredit(){
+	fmt.Println("Credit: krittakon chuchat")
+	fmt.Println("")
+}
+
 func Login() {
 	var email string
 	var password string
